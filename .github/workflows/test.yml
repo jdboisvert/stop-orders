@@ -1,0 +1,35 @@
+name: Tests
+
+#
+# Run unit tests
+#
+
+on:
+  pull_request:
+    types: [ opened, edited, synchronize, reopened ]
+    branches:
+      - '*'
+env:
+  CODE_DIRS: stop-orders
+
+jobs:
+  build:
+    name: >-
+     ubuntu-latest
+      /
+      1.20
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.20
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+
+      - name: Unit tests
+        run: |
+          go test ./...
