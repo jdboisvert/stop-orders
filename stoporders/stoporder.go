@@ -8,13 +8,18 @@ import "fmt"
  * @param price The current price of the symbol
  * @param symbol The symbol to execute stop orders for (ex. BTC_USDT)
  * @param stopOrders The map of all stop orders in memory
+ * @return The list of order ids that were executed
  */
-func ExecuteOrders(price float64, symbol string, stopOrders map[string][]StopOrder) {
+func ExecuteOrders(price float64, symbol string, stopOrders map[string][]StopOrder) []string {
 	buyKey := fmt.Sprintf("%v:BUY", symbol)
 	sellKey := fmt.Sprintf("%v:SELL", symbol)
 
-	checkBuyOrders(price, stopOrders[buyKey])
-	checkSellOrders(price, stopOrders[sellKey])
+	executedBuyOrderIds := checkBuyOrders(price, stopOrders[buyKey])
+	executedSellOrderIds := checkSellOrders(price, stopOrders[sellKey])
+
+	executedOrderIds := append(executedBuyOrderIds, executedSellOrderIds...)
+
+	return executedOrderIds
 }
 
 /**
@@ -73,7 +78,7 @@ func searchForOrdersToExecute(price float64, orders []StopOrder, shouldTrigger t
 				orders = orders[midIndex+1:]
 
 			} else {
-				// Sell 
+				// Sell
 				ordersToExecute = orders[midIndex:]
 
 				// Reassign the orders we should now check

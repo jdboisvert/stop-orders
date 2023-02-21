@@ -36,4 +36,8 @@ Merges into main *must always be rebased and squashed*. This can be done manuall
 
 ### Testing
 
-All test files are kept in ./test/ and named *_test.go. Github workflow automatically run the tests when code is pushed and will return a report with results when finished.
+All test files are named *_test.go. Github workflow automatically run the tests when code is pushed and will return a report with results when finished.
+
+You can also run the tests locally:
+
+    go test ./...
