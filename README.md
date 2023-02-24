@@ -1,4 +1,4 @@
-# Stop Orders v1.0.0
+# Stop Market Orders v1.0.0
 
 An implementation showcasing how one can manage orders in memory to execute [Stop Market Orders](https://www.investopedia.com/terms/s/stoporder.asp). This proof of concept illustrates how one can manage orders in a sorted list and find the orders to execute on every tick giving a price. This is a proof of concept and is not intended for production use.
 
