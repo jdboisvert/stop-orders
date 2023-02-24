@@ -11,5 +11,5 @@ push = false
     "{version}"
 ]
 "version/version.go" = [
-    "version"
+    "{version}"
 ]
