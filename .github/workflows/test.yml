@@ -1,7 +1,7 @@
 name: Tests
 
 #
-# Run unit tests
+# Run unit tests and fail if coverage is below threshold
 #
 
 on:
@@ -17,19 +17,24 @@ jobs:
     name: >-
      ubuntu-latest
       /
-      1.20
+      1.19
     runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.20
+          go-version: 1.19
 
       - name: Install dependencies
         run: |
           go mod tidy
 
-      - name: Unit tests
+      - name: Run tests and check coverage
         run: |
-          go test ./...
+          go test -v -coverprofile=coverage.out ./...
+          COVERAGE=$(go tool cover -func=coverage.out | sed -n '/total/p' | awk '{print substr($NF, 1, length($NF)-1)}')
+          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+              echo "Coverage is below 90%: $COVERAGE%"
+              exit 1
+          fi
