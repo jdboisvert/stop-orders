@@ -1,6 +1,9 @@
 package stoporders
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 /**
  * Executes all stop orders for the given symbol.
@@ -58,7 +61,7 @@ func checkSellOrders(price float64, orders []StopOrder) []string {
  * @param isBuy Whether or not the orders are buy orders
  * @return The list of order ids that were executed
  */
-func searchForOrdersToExecute(price float64, orders []StopOrder, shouldTrigger trigger, isBuy bool) []string {
+func searchForOrdersToExecute(price float64, orders []StopOrder, shouldTrigger CheckTriggerOrderFunction, isBuy bool) []string {
 	lowIndex := 0
 	highIndex := len(orders) - 1
 
@@ -68,7 +71,14 @@ func searchForOrdersToExecute(price float64, orders []StopOrder, shouldTrigger t
 		midIndex := (highIndex + lowIndex) / 2
 		stopOrder := orders[midIndex]
 
-		if shouldTrigger(price, &stopOrder) {
+		shouldTrigger, err := shouldTrigger(price, &stopOrder)
+
+		if err != nil {
+			// This should never happen and indicates we are passing in the wrong orders.
+			panic(err)
+		}
+
+		if shouldTrigger {
 			var ordersToExecute []StopOrder
 
 			if isBuy {
@@ -86,7 +96,14 @@ func searchForOrdersToExecute(price float64, orders []StopOrder, shouldTrigger t
 			}
 
 			for _, order := range ordersToExecute {
-				Execute(&order)
+				err := Execute(&order)
+				if err != nil {
+					log.Println("Error executing order: ", err)
+
+					// We should not block the rest of the orders from executing
+					continue
+				}
+
 				orderIdsExecuted = append(orderIdsExecuted, order.OrderId)
 			}
 

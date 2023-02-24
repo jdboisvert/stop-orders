@@ -1,6 +1,8 @@
 package stoporders
 
-type trigger func(float64, *StopOrder) bool
+import "fmt"
+
+type CheckTriggerOrderFunction func(float64, *StopOrder) (bool, error)
 
 /**
  * Determines if a stop order should be executed given the current price.
@@ -9,15 +11,15 @@ type trigger func(float64, *StopOrder) bool
  *
  * @param price The current price to be checked against
  * @param order The stop order to check if it should be executed
- * @return Whether or not the order should be executed
+ * @return Whether or not the order should be executed and an error if applicable
  */
-func ShouldTriggerBuy(price float64, order *StopOrder) bool {
+func ShouldTriggerBuy(price float64, order *StopOrder) (bool, error) {
 	if order.Side != "BUY" {
 		// This function is only for buy orders
-		return false
+		return false, fmt.Errorf("Expected order side to be BUY, but got %s", order.Side)
 	}
 
-	return order.TriggerPrice <= price
+	return order.TriggerPrice <= price, nil
 }
 
 /**
@@ -27,13 +29,13 @@ func ShouldTriggerBuy(price float64, order *StopOrder) bool {
  *
  * @param price The current price to be checked against
  * @param order The stop order to check if it should be executed
- * @return Whether or not the order should be executed
+ * @return Whether or not the order should be executed and an error if applicable.
  */
-func ShouldTriggerSell(price float64, order *StopOrder) bool {
+func ShouldTriggerSell(price float64, order *StopOrder) (bool, error) {
 	if order.Side != "SELL" {
 		// This function is only for sell orders
-		return false
+		return false, fmt.Errorf("Expected order side to be SELL, but got %s", order.Side)
 	}
 
-	return order.TriggerPrice >= price
+	return order.TriggerPrice >= price, nil
 }
