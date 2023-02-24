@@ -33,9 +33,8 @@ func generateOrders(numberOfOrdersToGenerate int) map[string][]stoporders.StopOr
 }
 
 func main() {
-	stopOrders := generateOrders(10)
+	stopOrders := generateOrders(1000)
 	start := time.Now()
 	stoporders.ExecuteOrders(20000.00, "BTC_USD", stopOrders)
 	fmt.Printf("Took %s", time.Since(start))
-
 }
