@@ -18,7 +18,7 @@ import (
 /**
  * Just a quick function used to help you generate some orders in memory to test with :)
  *
- * @param numberOfOrdersToGenerate The number of orders you want to generate for the test. 
+ * @param numberOfOrdersToGenerate The number of orders you want to generate for the test.
  * @return A map of stop orders keyed by the symbol and side.
  */
 func generateOrders(numberOfOrdersToGenerate int) map[string][]stoporders.StopOrder {
@@ -47,8 +47,8 @@ func generateOrders(numberOfOrdersToGenerate int) map[string][]stoporders.StopOr
 
 func main() {
     numberOfOrdersToGenerate := 1000 // Change this to whatever number you wish to test with (this will ensure there is this amount of orders in both directions. ex: 1000 will generate 1000 buy and 1000 sell orders in both directions).
-    
-    // Note that the generating of the orders can take a while depending on the number of orders you generate which is why it is not included in the start and end time. 
+
+    // Note that the generating of the orders can take a while depending on the number of orders you generate which is why it is not included in the start and end time.
 	stopOrders := generateOrders(numberOfOrdersToGenerate)
 	start := time.Now()
 	stoporders.ExecuteOrders(20000.00, "BTC_USD", stopOrders)
@@ -66,10 +66,10 @@ func main() {
     # install golang
     brew install golang
 
-    # install the golangci linter 
+    # install the golangci linter
     # more details: https://golangci-lint.run/
     brew install golangci-lint
-    
+
     # install pre-commit
     pip install pre-commit
     pre-commit install
@@ -91,3 +91,8 @@ All test files are named *_test.go. Github workflow automatically run the tests 
 You can also run the tests locally:
 
     go test ./...
+
+To run the tests with coverage:
+
+    go test -coverprofile=coverage.out ./...
+    go tool cover -html=coverage.out

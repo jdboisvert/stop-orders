@@ -30,6 +30,7 @@ jobs:
         run: |
           go mod tidy
 
-      - name: Unit tests
+      - name: Run tests and generate coverage report
         run: |
-          go test ./...
+          go test -v -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out | awk '{if ($3 < 90) exit 1}'
